@@ -1,10 +1,12 @@
 import typing
 import sqlalchemy as sa
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
 from typing import List
 
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 
-class VaisetBaseModel(DeclarativeBase):
+Base = declarative_base()
+class VaisetBaseModel(Base):
     __abstract__ = True
 
     @classmethod
