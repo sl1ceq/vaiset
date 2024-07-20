@@ -1,14 +1,17 @@
 import sqlalchemy as sa
 import datetime
 
-from typing import List
+from typing import List, TYPE_CHECKING
 from enum import Enum
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .comment import Comment
-from .user import User
 from db.models import base as base_models
+
+
+if TYPE_CHECKING:
+    from db.models.comment import Comment
+    from db.models.user import User
 
 
 class PostStatus(Enum):
@@ -43,11 +46,15 @@ class Post(base_models.VaisetBaseIDModel):
         onupdate=datetime.datetime.utcnow,
         nullable=False
     )
-    author: Mapped[User] = relationship(
+    user_id: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("user.id")
+    )
+    author: Mapped["User"] = relationship(
         "User",
         back_populates="posts"
     )
-    comments: Mapped[List[Comment]] = relationship(
+    comments: Mapped[List["Comment"]] = relationship(
         "Comment",
         back_populates="post"
     )
