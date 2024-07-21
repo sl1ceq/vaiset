@@ -3,6 +3,9 @@ from typing import List
 from fastapi import FastAPI
 
 from db.models.example import Example
+from db.models.user import User
+from db.models.comment import Comment
+from db.models.post import Post
 from db.queries.example import ExampleORM
 from utils.db.setup import setup_db
 from utils.schemas.example import ExampleSchema

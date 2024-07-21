@@ -1,12 +1,16 @@
 import datetime
+from typing import TYPE_CHECKING
+
 import sqlalchemy as sa
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import VaisetBaseIDModel
-from .post import Post
-from .user import User
 from db.models import base as base_models
+
+
+if TYPE_CHECKING:
+    from db.models.post import Post
+    from db.models.user import User
 
 
 class Comment(base_models.VaisetBaseIDModel):
@@ -31,16 +35,24 @@ class Comment(base_models.VaisetBaseIDModel):
         onupdate=datetime.datetime.utcnow,
         nullable=False
     )
-    post: Mapped[Post] = relationship(
+    post_id: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("post.id")
+    )
+    user_id: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("user.id")
+    )
+    post: Mapped["Post"] = relationship(
         "Post",
         back_populates="comments"
     )
-    author: Mapped[User] = relationship(
+    author: Mapped["User"] = relationship(
         "User",
         back_populates="comments"
     )
-    parent_comment: Mapped["Comment"] = relationship(
-        "Comment",
-        remote_side=[id],
-        back_populates="replies"
-    )
+    # parent_comment: Mapped[Comment] = relationship(
+    #     "Comment",
+    #     remote_side=[id],
+    #     back_populates="replies"
+    # )

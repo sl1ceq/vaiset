@@ -1,13 +1,15 @@
 import datetime
 import sqlalchemy as sa
 
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .comment import Comment
-from .post import Post
 from db.models import base as base_models
+
+if TYPE_CHECKING:
+    from db.models.post import Post
+    from db.models.comment import Comment
 
 
 class User(base_models.VaisetBaseIDModel):
@@ -44,11 +46,11 @@ class User(base_models.VaisetBaseIDModel):
         onupdate=datetime.datetime.utcnow,
         nullable=False
     )
-    posts: Mapped[List[Post]] = relationship(
+    posts: Mapped[List["Post"]] = relationship(
         "Post",
         back_populates="user"
     )
-    comments: Mapped[List[Comment]] = relationship(
+    comments: Mapped[List["Comment"]] = relationship(
         "Comment",
         back_populates="user"
     )
