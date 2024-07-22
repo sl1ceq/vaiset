@@ -43,6 +43,11 @@ class Comment(base_models.VaisetBaseIDModel):
         sa.Integer,
         sa.ForeignKey("user.id")
     )
+    parent_comment_id: Mapped[int] = mapped_column(
+        sa.Integer,
+        sa.ForeignKey("comment.id"),
+        nullable=True
+    )
     post: Mapped["Post"] = relationship(
         "Post",
         back_populates="comments"
@@ -51,8 +56,8 @@ class Comment(base_models.VaisetBaseIDModel):
         "User",
         back_populates="comments"
     )
-    # parent_comment: Mapped[Comment] = relationship(
-    #     "Comment",
-    #     remote_side=[id],
-    #     back_populates="replies"
-    # )
+    parent_comment: Mapped["Comment"] = relationship(
+        "Comment",
+        remote_side=[id],
+        back_populates="replies"
+    )
