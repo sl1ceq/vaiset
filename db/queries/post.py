@@ -1,10 +1,10 @@
 from typing import List
 
 from sqlalchemy import update
+from sqlalchemy.orm import joinedload
 
 from db.models.post import Post
 from db.sessions import Session
-
 
 
 class PostORM:
@@ -12,13 +12,21 @@ class PostORM:
     @staticmethod
     def get_posts() -> List[Post]:
         with Session() as session:
-            posts = session.query(Post).all()
+            posts = session.query(Post).options(
+                joinedload(Post.author),
+                joinedload(Post.comments)
+            ).all()
             return posts
 
     @staticmethod
     def get_post_by_id(post_id: int) -> Post:
         with Session() as session:
-            post = session.query(Post).filter_by(Post.id == post_id).first()
+            post = session.query(Post).options(
+                joinedload(Post.author),
+                joinedload(Post.comments)
+            ).filter(
+                Post.id == post_id
+            ).first()
             return post
 
     @staticmethod

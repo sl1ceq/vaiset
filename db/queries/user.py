@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy import update
+from sqlalchemy.orm import joinedload
 
 from db.models.user import User
 from db.sessions import Session
@@ -11,13 +12,21 @@ class UserORM:
     @staticmethod
     def get_users() -> List[User]:
         with Session() as session:
-            users = session.query(User).all()
+            users = session.query(User).options(
+                joinedload(User.posts),
+                joinedload(User.comments)
+            ).all()
             return users
 
     @staticmethod
     def get_user_by_id(user_id: int) -> User:
         with Session() as session:
-            user = session.query(User).filter_by(User.id == user_id).first()
+            user = session.query(User).options(
+                joinedload(User.posts),
+                joinedload(User.comments)
+            ).filter(
+                User.id == user_id
+            ).first()
             return user
 
     @staticmethod

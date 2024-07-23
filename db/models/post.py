@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from db.models.user import User
 
 
-class PostStatus(Enum):
+class PostStatus(str, Enum):
     DRAFT = 'draft'
     PUBLISHED = 'published'
 

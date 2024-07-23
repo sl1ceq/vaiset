@@ -26,4 +26,3 @@ Stack(Basic):
 Architecture:
 
     Still nth))))
-

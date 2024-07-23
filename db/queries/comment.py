@@ -1,6 +1,7 @@
 from typing import List
 
 from sqlalchemy import update
+from sqlalchemy.orm import joinedload
 
 from db.models.comment import Comment
 from db.sessions import Session
@@ -11,13 +12,23 @@ class CommentORM:
     @staticmethod
     def get_comments() -> List[Comment]:
         with Session() as session:
-            comments = session.query(Comment).all()
+            comments = session.query(Comment).options(
+                joinedload(Comment.author),
+                joinedload(Comment.parent_comment),
+                joinedload(Comment.post)
+            ).all()
             return comments
 
     @staticmethod
     def get_comment_by_id(comment_id: int) -> Comment:
         with Session() as session:
-            comment = session.query(Comment).filter_by(Comment.id == comment_id).first()
+            comment = session.query(Comment).options(
+                joinedload(Comment.author),
+                joinedload(Comment.parent_comment),
+                joinedload(Comment.post)
+            ).filter(
+                Comment.id == comment_id
+            ).first()
             return comment
 
     @staticmethod
