@@ -1,7 +1,9 @@
 from typing import List
+
+from sqlalchemy import update
+
 from db.models.comment import Comment
 from db.sessions import Session
-from sqlalchemy import update
 
 
 class CommentORM:
@@ -19,8 +21,8 @@ class CommentORM:
             return comment
 
     @staticmethod
-    def create_comment(data: dict) -> Comment:
-        new_comment = Comment(**data)
+    def create_comment(payload: dict) -> Comment:
+        new_comment = Comment(**payload)
         with Session() as session:
             session.add(new_comment)
             session.commit()
@@ -28,17 +30,18 @@ class CommentORM:
             return new_comment
 
     @staticmethod
-    def delete_comment(comment_id: int):
+    def delete_comment(comment_id: int) -> Comment:
         with Session() as session:
             comment = session.query(Comment).filter_by(Comment.id == comment_id).first()
             session.delete(comment)
             session.commit()
+            session.refresh(comment)
             return comment
 
     @staticmethod
-    def update_comment(comment_id: int, new_data: dict) -> Comment:
+    def update_comment(comment_id: int, payload: dict) -> Comment:
         with Session() as session:
-            data_to_update = update(Comment).where(Comment.id == comment_id).values(new_data)
+            data_to_update = update(Comment).where(Comment.id == comment_id).values(payload)
             session.execute(data_to_update)
             session.commit()
             updated_comment = session.query(Comment).filter_by(Comment.id == comment_id).first()

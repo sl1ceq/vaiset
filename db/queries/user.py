@@ -1,7 +1,9 @@
 from typing import List
+
+from sqlalchemy import update
+
 from db.models.user import User
 from db.sessions import Session
-from sqlalchemy import update
 
 
 class UserORM:
@@ -28,7 +30,7 @@ class UserORM:
             return new_user
 
     @staticmethod
-    def delete_user(user_id: int):
+    def delete_user(user_id: int) -> User:
         with Session() as session:
             user = session.query(User).filter_by(User.id == user_id).first()
             session.delete(user)

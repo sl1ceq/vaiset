@@ -58,4 +58,3 @@ class Post(base_models.VaisetBaseIDModel):
         "Comment",
         back_populates="post"
     )
-

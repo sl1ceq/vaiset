@@ -21,8 +21,9 @@ Stack(Basic):
     alembic
     flask
     dash
-    
+
 
 Architecture:
 
     Still nth))))
+
